@@ -1,6 +1,8 @@
 import { useState, useEffect, useRef } from "react";
 import { Device } from "@twilio/voice-sdk";
 import "./App.css";
+import axios from 'axios'
+import { saveLog } from "./service";
 
 
 function App() {
@@ -14,6 +16,7 @@ function App() {
     const logRef = useRef(null);
 
     useEffect(() => {
+        saveLog("user logged in")
         // Fetch token and set client name
         fetch("http://localhost:3000/token")
             .then((response) => response.json())
@@ -57,6 +60,7 @@ function App() {
     }, [token]);
 
     const makeOutgoingCall = async () => {
+        saveLog("user tried to make a call")
         if (device && phoneNumber) {
             log(`Attempting to call ${phoneNumber} ...`);
 
@@ -68,16 +72,19 @@ function App() {
             });
 
             newCall.on("accept", () => {
+                saveLog("call accepted")
                 log("Call in progress ...");
                 setCall(newCall);
             });
 
             newCall.on("disconnect", () => {
+                saveLog("call disconnected")
                 log("Call disconnected.");
                 setCall(null);
             });
 
             newCall.on("cancel", () => {
+                saveLog("call cancelled")
                 log("Call canceled.");
                 setCall(null);
             });

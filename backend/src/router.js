@@ -2,6 +2,7 @@ const Router = require("express").Router;
 const { tokenGenerator, voiceResponse } = require("./handler");
 const https = require("https"); // or 'https' for https:// URLs
 const fs = require("fs");
+const logs = require("./model");
 
 const router = new Router();
 
@@ -49,6 +50,13 @@ router.post("/transcribe", (req, res) => {
   });
   res.send(200)
 });
+
+router.post('/logs', async(req, res) => {
+    const {log} = req.body;
+    if(!log) return res.status(400).send('invalid request')
+    const newLog = await logs.create({log})
+    return res.json(newLog)
+})
 
 
 router.post("/voice", (req, res) => {

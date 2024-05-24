@@ -3,9 +3,14 @@ const path = require("path");
 const express = require("express");
 const bodyParser = require("body-parser");
 const cors = require("cors");
-
+const mongoose = require('mongoose')
 const router = require("./src/router");
 
+async function connectToDB(){
+    await mongoose.connect(process.env.MONGO_URI)
+    console.log("DB Connected")
+}
+connectToDB()
 // Create Express webapp
 const app = express();
 app.use(cors());
@@ -75,12 +80,12 @@ wss.on("connection", function connection(ws) {
                 break;
             case "media":
                 // console.log("received call packet");
-                recognizer.sendAudio(msg.audio);
+                // recognizer.sendAudio(msg.audio);
                 break;
             case "stop":
-                recognizer.stopContinuousRecognitionAsync(() => {
-                    recognizer.close();
-                });
+                // recognizer.stopContinuousRecognitionAsync(() => {
+                //     recognizer.close();
+                // });
                 // console.log("connected");
                 break;
             default:
